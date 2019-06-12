@@ -1,0 +1,19 @@
+\contentsline {section}{\numberline {1}Important}{1}{section.1}
+\contentsline {section}{\numberline {2}General Notes}{1}{section.2}
+\contentsline {section}{\numberline {3}Procedures}{2}{section.3}
+\contentsline {subsection}{\numberline {3.1}Starting Software}{2}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Pump on dilution unit}{2}{subsection.3.2}
+\contentsline {subsection}{\numberline {3.3}Check thermometers and heaters}{2}{subsection.3.3}
+\contentsline {subsection}{\numberline {3.4}Button up the fridge}{3}{subsection.3.4}
+\contentsline {subsection}{\numberline {3.5}Evacuate Vacuum Can}{3}{subsection.3.5}
+\contentsline {subsection}{\numberline {3.6}Precooling}{4}{subsection.3.6}
+\contentsline {subsection}{\numberline {3.7}Pulse precooling}{4}{subsection.3.7}
+\contentsline {subsection}{\numberline {3.8}Condensation}{4}{subsection.3.8}
+\contentsline {subsection}{\numberline {3.9}Warm-up}{5}{subsection.3.9}
+\contentsline {subsection}{\numberline {3.10}Clean External Trap}{6}{subsection.3.10}
+\contentsline {subsection}{\numberline {3.11}Opening the fridge}{7}{subsection.3.11}
+\contentsline {section}{\numberline {4}Usual Operating Conditions}{7}{section.4}
+\contentsline {subsection}{\numberline {4.1}Lamborghini}{7}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.2}Pagani}{7}{subsection.4.2}
+\contentsline {subsection}{\numberline {4.3}PID settings}{7}{subsection.4.3}
+\contentsline {section}{\numberline {5}Fridge Turnaround Performance}{7}{section.5}
