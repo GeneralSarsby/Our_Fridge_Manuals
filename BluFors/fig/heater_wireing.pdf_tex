@@ -1,0 +1,83 @@
+%% Creator: Inkscape inkscape 0.92.3, www.inkscape.org
+%% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
+%% Accompanies image file 'heater_wireing.pdf' (pdf, eps, ps)
+%%
+%% To include the image in your LaTeX document, write
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics{<filename>.pdf}
+%% To scale the image, write
+%%   \def\svgwidth{<desired width>}
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics[width=<desired width>]{<filename>.pdf}
+%%
+%% Images with a different path to the parent latex file can
+%% be accessed with the `import' package (which may need to be
+%% installed) using
+%%   \usepackage{import}
+%% in the preamble, and then including the image with
+%%   \import{<path to file>}{<filename>.pdf_tex}
+%% Alternatively, one can specify
+%%   \graphicspath{{<path to file>/}}
+%% 
+%% For more information, please see info/svg-inkscape on CTAN:
+%%   http://tug.ctan.org/tex-archive/info/svg-inkscape
+%%
+\begingroup%
+  \makeatletter%
+  \providecommand\color[2][]{%
+    \errmessage{(Inkscape) Color is used for the text in Inkscape, but the package 'color.sty' is not loaded}%
+    \renewcommand\color[2][]{}%
+  }%
+  \providecommand\transparent[1]{%
+    \errmessage{(Inkscape) Transparency is used (non-zero) for the text in Inkscape, but the package 'transparent.sty' is not loaded}%
+    \renewcommand\transparent[1]{}%
+  }%
+  \providecommand\rotatebox[2]{#2}%
+  \newcommand*\fsize{\dimexpr\f@size pt\relax}%
+  \newcommand*\lineheight[1]{\fontsize{\fsize}{#1\fsize}\selectfont}%
+  \ifx\svgwidth\undefined%
+    \setlength{\unitlength}{308.55532909bp}%
+    \ifx\svgscale\undefined%
+      \relax%
+    \else%
+      \setlength{\unitlength}{\unitlength * \real{\svgscale}}%
+    \fi%
+  \else%
+    \setlength{\unitlength}{\svgwidth}%
+  \fi%
+  \global\let\svgwidth\undefined%
+  \global\let\svgscale\undefined%
+  \makeatother%
+  \begin{picture}(1,0.31284646)%
+    \lineheight{1}%
+    \setlength\tabcolsep{0pt}%
+    \put(0,0){\includegraphics[width=\unitlength,page=1]{heater_wireing.pdf}}%
+    \put(0.4422462,0.25658501){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\textbf{STILL}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=2]{heater_wireing.pdf}}%
+    \put(0.54084666,0.25658501){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\textbf{MC}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=3]{heater_wireing.pdf}}%
+    \put(0.44242924,0.12513679){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\textbf{HS-MC}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=4]{heater_wireing.pdf}}%
+    \put(0.54027354,0.12513679){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\textbf{EXT}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=5]{heater_wireing.pdf}}%
+    \put(0.3433443,0.12513679){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\textbf{HS-ST}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=6]{heater_wireing.pdf}}%
+    \put(0.63917555,0.12513679){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\textbf{4K}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=7]{heater_wireing.pdf}}%
+    \put(0.86806894,0.25244605){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}Heater Still\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=8]{heater_wireing.pdf}}%
+    \put(0.07400914,0.09739214){\color[rgb]{0,0,0}\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}HS-ST\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=9]{heater_wireing.pdf}}%
+    \put(0.07524974,0.02498876){\color[rgb]{0,0,0}\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}HS-MC\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=10]{heater_wireing.pdf}}%
+    \put(0.86806894,0.03207657){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}4K\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=11]{heater_wireing.pdf}}%
+    \put(0.86806894,0.16240264){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}Heater MC\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=12]{heater_wireing.pdf}}%
+    \put(0.68397556,0.164673){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\textbf{NC}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=13]{heater_wireing.pdf}}%
+    \put(0.48437274,0.29786806){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\textbf{Lakeshore}\end{tabular}}}}%
+  \end{picture}%
+\endgroup%

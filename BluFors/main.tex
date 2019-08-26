@@ -5,6 +5,7 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage[margin=2cm]{geometry}
+\usepackage{pdfpages}
 
 \usepackage[hidelinks]{hyperref}
 \hypersetup{
@@ -37,6 +38,9 @@
 
 \usepackage{import}
 
+%https://tex.stackexchange.com/questions/25249/how-do-i-use-a-particular-font-for-a-small-section-of-text-in-my-document
+\newenvironment{handwritten}{\fontfamily{pzc}\selectfont\large}{}
+
 \newcommand{\Hethree}{^3\mathrm{He}}
 \newcommand{\Hefour}{^4\mathrm{He}}
 %\newcommand{\Bar}{\mathrm{Bar}}
@@ -44,7 +48,8 @@
 \newcommand{\mA}{\mathrm{mA}}
 \newcommand{\mK}{\mathrm{mK}}
 \newcommand{\K}{\mathrm{K}}
-\newcommand{\Ohm}{\Omega}
+\newcommand{\kelvin}{\mathrm{K}}
+\newcommand{\Ohm}{\ensuremath\Omega}
 
 \definecolor{subsectioncolor}{rgb}{0.3,0.5,0.75}
 \definecolor{sectioncolor}{rgb}{0.1,0.3,0.5}
@@ -66,7 +71,7 @@
 \newcommand{\temperature}[1]{{\color{temperaturecolor}\textbf{T}\textsubscript{#1}}}
 \newcommand{\volume}[1]{\ensuremath{\overline{#1}}}
 
-
+\newcommand{\formnumber}[1]{\framebox[1.5\width]{\phantom{{#1}}}}
 
 \setlength{\parindent}{2em}
 \setlength{\parskip}{0em}
@@ -77,6 +82,14 @@
 \setlength\partopsep{0.0pt}
 
 % HISTORY
+%
+% changed 0.4.3
+% - each item on it's own page
+% - diagram of fridge
+% - diagram of the patch panel
+% - checklist
+% - section on the logbook
+% - minor changes to text
 %
 % changed 0.4.2 (2019-06-12) MJS:
 % - added hyper ref package for clickable TOC
@@ -98,6 +111,11 @@
 %    COM port troubleshooting
 %    keep vent and aux closed,
 %    intstallation document
+%
+%  NOTES
+% Ramping the still power, why does it not work? 
+% Discuss changes to the condensing script 
+%
 
 
 \begin{document}
@@ -107,7 +125,7 @@
 { \Huge \color{titlecolor} Pagani \& Lamborghini } \\
 { \color{subsectioncolor}  \rule{\textwidth}{1px} }
 }
-{ \color{subsectioncolor} Version 0.4.2; last changed: 2019-06-12 } 
+{ \color{subsectioncolor} Version 0.4.5; last changed: 2019-08-26 } 
 
 
 
@@ -118,20 +136,22 @@
     \centering
     \textbf{
 Authorized operating personal only.\\
-If at any point you are uncomfortable or do not know what you
+If at any point you are uncomfortable or you do not know what you
 are doing, find someone who does. }
     }%
 }
 \\[1em]
 
 
-The manual provided by Bluefors is a helpful reference,
+The manual provided by Bluefors is a helpful reference\footnote{\url{smb://srv034.tudelft.net/staff-groups-tnw/ns/qt/Transmon/Fridges/5.\%20Lamborghini/Manuals/FromBluefors/Manuals}},
 but \textbf{DO NOT} follow the procedures for cooldown and warm-up given in that manual 
  - you risk the destruction of valuable equipment!
  Operate the fridge only as described in this document.  
  
 
 \tableofcontents
+
+\newpage
 
 \section{General Notes}
 \begin{itemize}
@@ -141,16 +161,110 @@ After turning them on, wait until you hear a relay click and give them a few sec
 manifold to the \volume{\valve{10} \valve{11}} manifold as well as internal spaces inside the pump.
 This is normal. It takes about 20 minuites
 to fully recover a quoted \pressure{4} value.
-\item Do not leave the fridge in \thing{local} mode. Otherwise you are left powerless when
+\item Do not leave the fridge in \thing{local} mode. Otherwise you are left without control when
 logging in remotely in case of emergency.
-\item Since we rarely have a need to control \temperature{MC},
+\item Since we rarely have a want to control \temperature{MC},
 we usually use the ``sample heater'' output of the LakeShore for controlling
-the still temperature. The correct wiring is thus: Heater-Still attached 
-to ``Sample heater'' and Heater-MC not attached.
-\item This is a living document and is updated to reflex the best known operating procedures.
+the still temperature. The correct wiring is thus: \thing{Heater-Still} attached 
+to ``MC'' of the patch panel and \thing{Heater-MC} not attached. Shown in figure \ref{fig:heater_wireing}.
+\item This is a living document and is updated to reflect the best known operating procedures.
 If you spot a mistake or think of an improvement contact MJS or BT. 
 \end{itemize}
 
+Naming conventions and alternative names:
+\begin{itemize}
+\item $\temperature{1}$ the upper pulse tube flange, nominally $50\kelvin$.
+\item $\temperature{2} = \temperature{PT}$ the flange with the pulse tubes around $3-5\kelvin$ when running.
+\item $\temperature{5} = \temperature{still}$, the still temperature.
+\item $\temperature{6} = \temperature{mc}$, the mixing chamber temperature.
+
+\item $\pressure{1} = \pressure{VC}$, the vacuum can pressure.
+\item $\pressure{2} = \pressure{still}$, the still pressure.
+\item $\pressure{3} = \pressure{C}$, the condensing pressure.
+\item $\pressure{4} = \pressure{scroll}$, the pressure at the head of \thing{SCROLL1}.
+\item $\pressure{5} = \pressure{tank}$, the helium tank pressure.
+\item $\pressure{6} = \pressure{aux}$, the auxiliary manifold pressure.
+\end{itemize}
+See figures \ref{fig:blu_fors_ghs} and \ref{fig:fridge_layout} at the back of this document to see where they are located.
+
+
+\newpage
+\section{Logbook}
+Somebody else should be able to pick up the log book and be able to fully understand the current state and
+be able to then operate the machine with no other communication.
+This is vital for the shared operation of equipment.
+As such, the use of the logbook is \emph{mandatory} when operating the fridge.
+It keeps a record of all interactions with the fridge, vital diagnostic values, and thoughts to pass onto
+other users. The lab book belongs to the fridge; it is not yours to take home, away, or out to lunch. 
+We take ownership of our work to enable a detailed follow up if needed. 
+
+Specifically:
+\begin{itemize}
+\item The first entry on a day contains the date, time, and initials. 
+For example:\\
+\begin{handwritten}
+2019-06-01 0930 MJS begin warmup procedure 
+\end{handwritten}\\
+\item Later entries of the same day/user only need the time, e.g.\\
+\begin{handwritten}
+0932 turn off turbo
+\end{handwritten}
+\item Number the pages and include the cooldown number.
+\item Make change of samples and cooldowns clear. \\
+{
+\centering
+\rotatebox[origin=bl]{12}{%
+\begin{handwritten}%
+\fbox{%
+\fbox{%
+\huge%
+Begin Cooldown \#21%
+}%
+}%
+\end{handwritten}%
+}
+}
+\item Fill in the cooldown table and dump pressure table at the front of the logbook when needed.
+\item Leave the logbook at the fridge or on the logbook shelf. 
+You can and should make photocopies, physical or digital, to move the information around.
+\item The wiring needs to be documented for each run.
+This can refer to standard wiring or back to the last run. 
+\end{itemize}
+
+Generally:
+\begin{itemize}
+\item The use of tables, cartoons, and sketches to communicate clearly is encouraged.
+\item Record observations of errors and quirks e.g.:\\
+\begin{handwritten}
+1513 scroll made strange noise when starting up, but went away. Check out later?
+\end{handwritten}\\
+or\\
+\begin{handwritten}
+1614 P6 is high, 10 mBar, but was left low. Leak? 
+\end{handwritten}
+\item Record short-term intentions with actions e.g.:\\
+\begin{handwritten}
+1707 cleaning up manifold V21-V20 on turbo so I can leak check it soon. 
+\end{handwritten}
+
+\item Taking photographs for documentation is great, write in the location of the files\\
+\begin{handwritten}
+0932 fixed the MC heater wire, photos at:\\
+\hspace{2em} Transmon/Fridges/1. Ferrari/Maintenance/2019-04-02\_MixingChamberHeater/
+\end{handwritten}
+
+\item Write in-order chronologically with no gaps. Exceptions must be made very clear.
+\item No loose papers. Glue or tape them in.
+\item Use strikethroughs for corrections. No deletions. 
+\end{itemize}
+
+
+
+
+
+
+
+\newpage
 \section{Procedures}
 
 \subsection{Starting Software}
@@ -168,24 +282,39 @@ Ensure that all the following are running
     \texttt{fridge\_tracker3.py}. Stop it if it is running in a terminal window (Ctrl+C).
     Open the script in an editor and set the startdate value (line $13$) to the current
     date (or whenever you want the data displayed on the web to start).
-    Then restart the script by running \texttt{python fridge\_tracker3.py}.
+    Then restart the script by running \texttt{python fridge\_tracker3.py} in a terminal at the correct working directory.
 \end{itemize}
 
+\newpage
 \subsection{Pump on dilution unit}
+
+%%blu_fors_ghs_pump_vc
+%blu_fors_ghs_normal_circulation
+\begin{figure}[ht]
+\centering
+\includegraphics{fig/blu_fors_ghs_pump_dilution_unit.pdf}
+\caption{\textbf{Pumping the DR and trap.} Using an external turbo connected to \thing{AUX}. 
+\label{fig:bfgpbu}
+}
+\end{figure}
+
 The fridge is warm, the mix is recovered, and the manual dump valve is closed.
 All valves on the control panel are closed.
 Around \thing{scroll1} and the compressor, a small amount of mixture remains, and these valves should thus never be opened when the fridge is warm.
-Do not proceed if they were open!
+Do not proceed if they were open! While pumping the valve configuration is shown in figure  \ref{fig:bfgpbu}. 
 \begin{enumerate}
+    \item Attach an external pump with turbo to the \thing{AUX} port.
     \item Open \valve{2}. Monitor \pressure{2}, it should settle at not more than $5 \mBar$.
     \item After \pressure{2} has settled, open the gate valve \valve{1}.
-    \item Start \thing{scroll2}, open \valve{21} to evacuate the auxiliary unit, then open \valve{18} to start pumping on the dilution unit.
+    \item Start the external turbo, open \valve{20} to evacuate the auxiliary unit, then open \valve{18} to start pumping on the dilution unit.
     \item When $\pressure{2} < 5 \mBar$, turn on \thing{turbo1}.
-    \item Open \valve{3}, \valve{4} to the condensing side, and \valve{7} to the trap.
+    \item Open \valve{3}, \valve{4} to also pump the condensing side.
+    \item If the trap is warm, open \valve{7} to also pump it clean.
     \item Pump for at least 30 minutes.
     \item Close all valves and turn off \thing{turbo1}.
 \end{enumerate}
 
+\newpage
 \subsection{Check thermometers and heaters}
 The patch panel is located on the right side of the control panel.
 \begin{enumerate}
@@ -193,21 +322,38 @@ The patch panel is located on the right side of the control panel.
     \temperature{6} should be over range (``T. OVER'').
 For Pagani the resistance should read $1.024$~k$\Omega$.
 For Lamborghini the resistance should be around 10~k$\Omega$.
-    \item Check the resistance of the heaters according to the table:
+    \item Check the heaters.
+    On the right side of the gas handling system control unit is a patch panel with leads that connect to the heaters.
+    Unplug the leads from the patch panel and use a multimeter to probe the heater's resistance. 
+    They should be close to the values in the table: 
 
         \begin{tabular}{llll}
-        \color{subsectioncolor} Heater  & \color{subsectioncolor} Channel & \color{subsectioncolor} Resistance at RT ($\Omega$) & \color{subsectioncolor}  Resistance Cold ($\Omega$) \\[0.2em]
-        Heatswitch still \thing{HS-ST} & 1       & 30                          & ?                          \\
-        Heatswitch MC \thing{HS-MC}    & 2       & 50                          & ?                          \\
-        Still heater \thing{EXT}       & 3       & 155                         & 90                         \\
-        MC heater                      & 4       & 170                         & ?                          \\
-        4K Power Heater                & n/a     & 12                          & ?                         
+        \color{subsectioncolor} Heater  & \color{subsectioncolor} Channel & \color{subsectioncolor} Approx. Resistance at RT ($\Omega$) \\[0.2em]
+        Heatswitch still \thing{HS-ST} & 1       & 30                                                 \\
+        Heatswitch MC \thing{HS-MC}    & 2       & 50                                                 \\
+        Still heater \thing{EXT}       & 3       & 155                                                \\
+        MC heater                      & 4       & 170                                                \\
+        4K Power Heater                & n/a     & 12                                                 
         \end{tabular}
     
-    \item Turn on \thing{HS-MC}, \thing{HS-ST} and \thing{EXT} on the control panel and use a voltmeter to measure the voltages across the connectors.
+    \item Turn on \thing{HS-MC}, \thing{HS-ST} and \thing{EXT} on the control panel and use a voltmeter to measure a few volts across the connectors.
+    
     
 \end{enumerate}
+When you are sure the devices are fine, leave the patch panel in the configuration as shown in figure \ref{fig:heater_wireing}.
 
+
+\begin{figure}[h]
+\centering
+\import{fig/}{heater_wireing.pdf_tex}
+\caption{\textbf{Heater Patch Panel Wiring.}
+Note that still and MC are swapped to enable control of the still from the Lakeshore.
+\label{fig:heater_wireing}
+}
+\end{figure}
+
+
+\newpage
 \subsection{Button up the fridge}
 The samples are mounted in the fridge and the thermometers and heaters are checked.
 The state of the inside of the fridge has been documented with photographs and documented in the fridge logbook.
@@ -219,8 +365,8 @@ The state of the inside of the fridge has been documented with photographs and d
         \begin{itemize}
         \item Due to the bayonets, for most shields, only two orientations are possible: 
             \begin{itemize}
-            \item[Lamborghini:] orient all seams towards the hallway. 
-            \item[Pagani:] orient all seams towards the window. 
+            \item Lamborghini: orient all seams towards the hallway. 
+            \item Pagani: orient all seams towards the window. 
             \end{itemize}
         \item The cold-plate shield of Pagani has no bayonets. It should have its seam in the middle of the line of sight port `AA' (towards the window, slightly towards Maserati).
 % what is clearshot AA? 
@@ -229,17 +375,30 @@ The state of the inside of the fridge has been documented with photographs and d
     This is the top inside edge of each shield, and the outside surface of the plates.
     \item Check for dust in the bottom of the shields, and remove if present.
     \item The screws for the 50K and 4K shields must not be confused with the slightly longer screws that are only meant to be used for the top of the vacuum can.
-    \item When closing the vacuum can, take each O-ring out of the groove, wipe the O-ring and groove with IPA and apply fresh high-vacuum grease to the O-ring until a thin
+    \item When closing the vacuum can, take each O-ring out of the groove, wipe both the \textbf{O-ring} and \textbf{groove} with IPA and apply fresh high-vacuum grease to the O-ring until a thin
     film coats the entire ring.
     While doing so, you may let the individual shield parts rest on the floor, as they will sit on the bayonet screws, not on the sealing surface.
-    \item The opposing face that mates with the o-ring also needs to be cleaned.
+    \item The opposing face that mates with the O-ring also needs to be cleaned.
     \item Double check for any dust on the O-rings just before making the vacuum seal.
 \end{itemize}
 
+\newpage
 \subsection{Evacuate Vacuum Can}
+
+%%
+%blu_fors_ghs_normal_circulation
+\begin{figure}[ht]
+\centering
+\includegraphics{fig/blu_fors_ghs_pump_vc.pdf}
+\caption{\textbf{Pumping the VC.} Using an external turbo connected to \thing{AUX}. 
+\label{fig:blu_fors_ghs_pump_vc}
+}
+\end{figure}
+
 Thermometers and heaters are checked, all shields are closed, the traps and dilution unit have been evacuated.
 All valves are closed and pumps are turned off.
 The trap has been cleaned and is in LN2.
+While pumping the valve configuration is shown in figure  \ref{fig:blu_fors_ghs_pump_vc}.
 \begin{enumerate}
     \item Turn off \pressure{1} on the MaxiGauge (``Sen-off'').
     The gauge is sensitive to fast pressure changes when active.
@@ -248,19 +407,21 @@ The trap has been cleaned and is in LN2.
     Attach it to the \thing{AUX} port, open \valve{20}, then start the external turbo immediately, the help from the turbo roughing pump makes quite a difference.
     \item The vacuum can is big and roughing takes long, even with both \thing{scroll2} and the roughing pump of the external turbo.
     If the external turbo is not set to delay run-up or to idle up to a set point, it might abort run-up. In that case, just restart it.
-    \item Wait until $\pressure{6} < 1 \mBar$.
+    \item Wait until $\pressure{6} < 0.1 \mBar$.
     \item Turn on the \pressure{1} sensor. Close \valve{21} and turn off \thing{scroll2}.
     \item Precooling can now be started. Leave the external turbo pumping until $\pressure{1} = 10^{-5} \mBar$. 
+    \item After 1 hour, check that the Turbo is still running, restart if needed.
 \end{enumerate}
 
-\subsection{Precooling}
+\newpage
+\subsection{Precooling, 300 K to 4 K}
 \begin{enumerate}
     \item Open the manual valve to the mixture dump, on the left of the gas handling system. 
     \item Check whether \pressure{5} reaches the value recorded after the last cooldown.
     \item Turn on the main breakers of the pulse tube compressors, wait until they have loaded their firmware, then start them by turning on \thing{pulse tube}.
     \item Turn on \thing{HS-MC} and \thing{HS-ST}.
     \item The pulse tube compressors run very warm in the beginning of precooling.
-    Monitor the compressors to make sure that they do not shut down. 
+    If the oil temperature reaches over $49^\circ\mathrm{C}$, they will shut down. If this happens just restart them. 
     \item Optional: After around 12 hours of precooling, it helps to let exchange gas into the dilution unit. For that, 
         \begin{enumerate}
         \item Open \valve{13}, \valve{9} and \valve{7}, wait 10 seconds for the pressures to equalize
@@ -272,18 +433,40 @@ The trap has been cleaned and is in LN2.
 disconnect the external turbo.
 \end{enumerate}
 
-\subsection{Pulse precooling}
+\subsection{Test method for cooldown}
+This method is under test, it takes more effort but less time. 
+The vacuum can is evacuated further before starting, at least $10^{-2}\mBar$ or lower.
+The scroll still does useful pumping above these pressure, and the turbo is left running until \pressure{aux} goes under range.
+Do not turn on the heatswitches until \temperature{still} is below $100\kelvin$, as above that point they
+just add heat to the system without benefit.
+Below $100\kelvin$ start circulation of the mix in \volume{\valve{13}\valve{8}} and \volume{\valve{13}\thing{TANK}}, but not the main tank.
+Circulate this small amount of mixture through the \thing{trap} and the normal dilution unit with \thing{scroll1} and \thing{turbo1} but without the compressor.
+When the pulse tube temperature \temperature{PT} drops below $5\kelvin$, open \valve{13} and the manual tank valve.
+This lets the mixture begin condensing already.
+However \temperature{mc} will still be very hot.
+When both \temperature{mc} and \temperature{still} are below $3.5\kelvin$, turn off \thing{HS-ST} and \thing{HS-MC}.
+As the mixture begins to slowly condense in, the \temperature{mc} will dip below $1\kelvin$,
+at this point close \valve{13} and let the system circulate with this minimal mixture. 
+This configuration should have a column of liquid down to the mixing chamber, providing more cooling power to where is is most needed.
+Wait until \temperature{mc} is below $750\mK$ and then open \valve{13} to condense in more. You still need a hairdryer on the traps at this point.
+When \pressure{c} drops below $500\mBar$, close \valve{13} and use the needle valve with \valve{12} to raise \pressure{4} and \pressure{5} to around $1000\mBar$.
+Finally use \valve{11} to get the rest of the mixture in. The system should already run normally. Apply still heat when \temperature{mc} begins to fall.
+
+
+
+\newpage
+\subsection{Pulse precooling, 4 K to 1 K}
 When the still plate temperature \temperature{5} falls below 15 K (after around 30 hours after start of the pulse tubes),
 pulse precooling, PPC, can be started.
 This procedure helps to thermalize the dilution unit, and also cleans the mixture.
-PPC can be omitted if the fridge has already settled to around 4K for more than 5 hours before condensation.
+PPC may be omitted if the fridge has already settled to around 4K for more than 5 hours before condensation.
 PPC is controlled by a computer script,
 which periodically lets the mixture expand into the dilution unit from the still side, and then pumping it again.
 \begin{enumerate}
     \item Wait until $\temperature{5} < 15$~K. After start of pulse tubes:
     \begin{enumerate}
-        \item[Lamborghini]: ca. 35 hours
-        \item[Pagani]: ca. 45 hours
+        \item[-] Lamborghini : ca. 35 hours
+        \item[-] Pagani : ca. 45 hours
     \end{enumerate}
     \item Ensure that the manual dump valve is opened.
     \item Load and start the script ``\texttt{Pulse\_PreCool\_v1\_24}''. It runs for 2 hours.
@@ -291,108 +474,257 @@ which periodically lets the mixture expand into the dilution unit from the still
     \item Wait about 30 minutes until \temperature{6} falls below $4$~K.
 \end{enumerate}
 
-\subsection{Condensation}
+\newpage
+\subsection{Condensation, 1 K to base}
 PPC is finished and the fridge is circulating a small amount of mixture. \temperature{6} has fallen to 4 K. 
 \begin{enumerate}
     \item Point a blow dryer (with a timer set to 2~h) at the top of the external trap, right below the O-rings. This is to prevent ice forming on the O-rings during the high load of condensation.
     \item Condensation is controlled by the script "\texttt{Condense\_wLN2\_v1\_24}''. Load and run it in the ValveControl Programming tab. Condensation takes around three hours.
-    \item Wait until condensation is finished.
+    \item Wait until condensation is finished. The fridge should now be in a normal circulation mode:
+    
+    
+        \includegraphics{fig/blu_fors_ghs_normal_circulation.pdf}
+        
+        
     \item Turn off the blow dryer.
     \item With lots of mass in the fridge (especially Pagani with extra CP shield), the fridge might enter a phase of lumpy He-3. This leads to large oscillations in \pressure{2}, \pressure{4} and flow rate.
     It might happen that $\pressure{4} > 1200 \mBar$; then the safety valve BPV3 should break and let a bit of the mixture back in the tank. 
         \begin{enumerate}
         \item If you observe a small increase of \pressure{5} (no more than $50 \mBar$),
         wait until the fridge is stable and then pump the dump empty again by opening \valve{11}. 
-        \item If \pressure{5} increses above 1~Bar after normal condensation, the condensing lines might be blocked,
+        \item If \pressure{5} increases above 1~Bar after normal condensation, the condensing lines might be blocked,
 or the fridge is still too hot.
     You might wish to wait until the fridge is cooled a bit further, and then run the condensation script again. 
 If normal circulation can not be reached, contact an experienced user.
+
         \end{enumerate}
     \item When dilution cooling sets in, 
 \temperature{MC} below 1~K and falling fast. 
-    turn on the still heater by setting the Sample heater range to 120 mW and Setpoint to 1.05 K (Lamborghini) or 1.22 K (Pagani).
+    turn on the still heater by setting the Sample heater range to 120 mW and Setpoint to 1.05 K (Lamborghini) or 1.15 K (Pagani).
+    You can use ether the Lakeshore software on the computer or the front panel. 
+    
+    {
+    \centering
+    %% \textbf{\color{sectioncolor}Venting KF Cap}\\
+    \import{fig/}{still_heating.pdf_tex}
+    }
+    
+    Using the software, shown panel \textbf{a}:
+    \begin{enumerate}
+        \item[1] Open the PID tab in the Lakeshore Reader software
+        \item[2] Read in the current value from the software
+        \item[3] Change the setpoint to what is desired
+        \item[4] Change the range from 'Off' to '31.6'
+        \item[5] Send the settings back to the device by clicking `write'.
+    \end{enumerate}
+    Using the front panel, shown in panel \textbf{b}:
+     \begin{enumerate}
+        \item[1] Press `SETPOINT' to begin modifying the PID setpoint
+        \item[2,3] Key in the setpoint in kelvin (i.e. \texttt{1 . 0 5})
+        and confirm the value using `ENTER' 
+        \item[4,5] Use the scroll buttons to select the unit of 'K', and confirm again with `ENTER'
+        \item[6] To turn the heating on, press `Heater Range' 
+        \item[7,8] Use the scroll buttons to select `120mW'
+         and confirm the power with `Enter'.
+    \end{enumerate}
+    
 \end{enumerate}
 
+
+\newpage
 \subsection{Warm-up}
-Warm up is performed manually. \textbf{Do not} use the Bluefors-supplied warm-up scripts; they let \emph{nasty wet} room air in the VC as exchange gas while the fridge is cold!
-The fridge is circulating normally, all room-temperature electronics and HEMT biases are off.
+Warm up is performed manually. \textbf{Do not} use the Bluefors supplied warm-up scripts; they let \emph{nasty wet} room air in the VC as exchange gas while the fridge is cold!
+
+These instruction begin assuming the fridge is circulating normally.
+
 \begin{enumerate}
+    \item Ensure all room-temperature electronics are in a safe state.  
     \item Record the current temperatures and pressures in the fridge logbook.
-    \item Turn off sensor \pressure{1} on the MaxiGauge (``Sen-off'').
-    \item Check that the manual valve to the mixture dump is open.
-    \item Open \valve{13}, close \valve{9}.
-    \item Turn off \thing{turbo1}.
-    \item Turn on \thing{HS-ST} and \thing{HS-MC}. 
-    \item Apply 90~mW to the MC plate using the LakeShore:
+    \item Turn off sensor \pressure{1} on the MaxiGauge (``Sen-off''). 
+    You will later add gas to the vacuum can and this sensor can get hurt by high pressures. 
+    
+    {
+    \centering
+    %% \textbf{\color{sectioncolor}Venting KF Cap}\\
+    \import{fig/}{sensor1_off.pdf_tex}
+    }
         \begin{enumerate}
-        \item Select ``Output setup'' (button ``4'').
-        \item Select ``Sample heater''.
-        \item Set ``Heater Range'' to 100 mA, then ``Manual output'' to 90 mW.
+            \item use the `sensor' button repeatedly as needed to select \pressure{1}, shown in panel \textbf{a}.
+            \item use the `sens-off' button to turn the sensor off, shown in panel \textbf{b}. 
         \end{enumerate}
-    \item Prepare the first of two additions of helium exchange gas. Flush and pump the volume \volume{\valve{14} \valve{16} \valve{21}}:
+        
+    \item The mixture need to go into the mixture tank. Check that the manual valve, located on the left side of the gas handling system, is open. 
+    
+    {
+    \centering
+    %% \textbf{\color{sectioncolor}Venting KF Cap}\\
+    \import{fig/}{tank_valve.pdf_tex}
+    }
+    
+    \item Turn off \thing{turbo1}. We will soon have \pressure{2} larger than what \thing{TURBO1} can handle and it needs time to spin down.
+    
+    \item Open \valve{13}. The mixture is now being recovered to the tank from both the still side and the condensing side.
+    After a few seconds the condensing pressure will equal the tank pressure.
+    \item Close \valve{9} to direct flow to only As the pressure builds in the tank.
+    \item Turn on \thing{HS-ST} and \thing{HS-MC}.
+    This activates the heat switches to thermally connect the mixing chamber and still to the pulse tube plate causing the liquid helium mixture
+    to boil off and be recovered.
+    
+    
+    There will be two additions of helium exchange gas. 
+    The first shot of exchange gas will enable full recovery of the mixture from the dilution unit.
+    The second will assist the fridge warming up to room temperature.
+    
+    \item Prepare manifold \volume{\valve{14} \valve{16} \valve{21}} to hold the exchange gas:
         \begin{enumerate}
-        \item Turn on \thing{scroll1}, open \valve{16} and \valve{21}.
-        \item Open a helium bottle and regulate to a gentle flow.
-        Attach the helium line to the \thing{TEST} port (adapter is kept in drawer of Pagani control panel).
-        \item Close \valve{21}, open \thing{TEST} manual valve and \emph{slowly} let about $\pressure{6} = 1000 \mBar$ of helium in the volume. Watch out: the high pressure connectors can not be pumped under 1 atm. The helium line must always be
-over atmosphere to prevent sucking in air through the
-connector. 
+        \item Turn on \thing{scroll2}, open \valve{21} and \valve{16}, to initially evacuate the manifold until $\pressure{6} < 1 \mBar$. 
+        \item Prepare the external helium line (shown in panel \textbf{a}):
+        
+{
+\centering
+%% \textbf{\color{sectioncolor}Venting KF Cap}\\
+\import{fig/}{helium_gas_bottle.pdf_tex}
+}
+
+            \begin{enumerate}
+             \item[1] Close-off regulation using the center valve counter-clockwise until gentle resistance. 
+             \item[2] Open the high-pressure helium cylinder valve using the key, about half a turn for fully open.
+             \item[3] Open the front valve.
+             \item[4] Dial in a gentle flow using the regulation valve feeling the flow with your thumb. 
+            \end{enumerate}
+        \item Using an adapter, attach the helium line to the \thing{TEST} port. (Panels \textbf{b} and \textbf{c})
+        \item Close \valve{21} then open \thing{TEST} manual valve, shown in panel \textbf{d},  and \emph{slowly} let about $\pressure{6} = 1000 \mBar$ of helium in the volume.
+        Watch out: the adapter to the helium line can not be pumped under 1 atm without leaking, so opening the \thing{TEST} valve too quickly will let in air.
         \item Close the \thing{TEST} manual valve, then open \valve{21} to evacuate the volume.
         \item Flush the volume two more times, then close \valve{21}.
         \end{enumerate}
-    \item Prepare the first shot of exchange gas: Let $\pressure{6} = 15 \mBar$ of helium in the
-    volume \volume{\valve{14} \valve{16} \valve{21}} through the \thing{TEST} manual valve.
-    \item Wait until \thing{turbo1} is spun down.
-    \item Open \valve{3} and \valve{2}. 
+        
+      Prepare the first shot of exchange gas
+       
+    \item Using \thing{TEST} and \valve{21}, let $\pressure{6} = 15 \mBar$ of helium in the
+    volume \volume{\valve{14} \valve{16} \valve{21}}. You can juggle \valve{16} and \valve{21} to lower the pressure in steps. 
+    \item Wait until \thing{turbo1} is spun down [picture].
+    \item Open \valve{3} and \valve{2} to recover mixture from both sides of the dilution unit and the trap.
     \item Open \valve{14} to let the exchange gas into the vacuum can. Wait 5 seconds, then close \valve{14} again.
-    The still, \pressure{2} should increase as the mix begins to evaporate fast.
-    \item Wait until $\pressure{2} < 10 \mBar$ (ca. 10 minutes).
-    \item Turn on \thing{turbo1} .
-    \item Wait until $\pressure{2} < 5\times10^{-4} \mBar$ and $\temperature{6} > 20~K$. Then an additional 30 minutes to ensure full recovey of the mixture.
-    \item Record the final values of \pressure{4} and \pressure{5} in the fridge logbook.
-    \item Close the manual dump valve, then close all other valves
-    \item Turn off all small heaters (\thing{HS-ST}, \thing{HS-MC} and ``All Off'' on the LakeShore), and pumps \thing{scroll1} and \thing{turbo1}. 
-    \item Add more exchange gas:
+    The still, \pressure{2}, should increase as the mix begins to evaporate.
+    \item Wait until $\pressure{2} < 10 \mBar$ (ca. 10 minutes), This is low enough so that the turbo can run.
+    \item Turn on \thing{turbo1}.
+    
+    There is time while the rest of mixture is recovering, so prepare the second shot of exchange gas.
+    
+    \item Using \thing{TEST} and \valve{21}, let $\pressure{6} = 200 \mBar$ of helium in the
+    volume \volume{\valve{14} \valve{16} \valve{21}}. You can juggle \valve{16} and \valve{21} to lower the pressure in steps. 
+    
+    Do not add the second shot of exchange gas yet.
+    
+    \item Close the helium bottle at the cylinder and at the regulator.
+    \item Detach the helium line and attach a blank to the \thing{TEST} port.
+    \item Set up a fan (or better two) pointed at the vacuum can to prevent condensation for after when the second shot of exchange gas is added.
+    Do not place the fans directly under the vacuum can as there may be dripping water condensate.
+    
+    {
+    \centering
+    %% \textbf{\color{sectioncolor}Venting KF Cap}\\
+    \import{fig/}{fans.pdf_tex}
+    }
+        
+    \item Wait until $\pressure{2} < 5\times10^{-4} \mBar$. Despite the low pressure there is still significant flow. 
+    \item Wait until $\temperature{6} > 20~\kelvin$. The porous silver inside the dilution unit holds helium on its surface well above the bulk boiling point. 
+    \item Wait an additional 30 minutes to ensure full recovery of the mixture and prevent aggregate losses. 
+    \item Record the values of \pressure{4} and \pressure{5} in the fridge logbook.
+    Check that they are very close to the previous end of run. 
+    If not, \emph{do not} proceed to warm up the fridge further, and find an experienced user.
+    \item Close the manual dump valve.
+    \item Close all other valves.
+    \item Turn off \thing{HS-ST} and \thing{HS-MC}.
+    \item Turn off and pumps \thing{scroll1} and \thing{turbo1}. 
+    
+    \item Turn off the \thing{pulse tube}:
+    
+    {
+    \centering
+    %% \textbf{\color{sectioncolor}Venting KF Cap}\\
+    \import{fig/}{compressor.pdf_tex}
+    }
+    \begin{enumerate}
+    \item Turn off the \thing{pulse tube} on the control panel.
+    \item Record the \thing{pulse tube}'s runtime in the log book this is shown on the compressor's display, seen in panel \textbf{b}.
+    \item Then switch off the compressors' main breakers, seen in panel \textbf{c}.
+    \end{enumerate}
+    
+    \item Let the exchange gas in by opening \valve{14} for about 5 seconds, then close it. 
+    \item Turn on the 4K heater in the software:
+    
+    {
+    \centering
+    %% \textbf{\color{sectioncolor}Venting KF Cap}\\
+    \import{fig/}{4K_heater_settings.pdf_tex}
+    }
         \begin{enumerate}
-        \item Add $\pressure{6} = 200 \mBar$ helium through the manual \thing{TEST} valve. 
-        \item Close \thing{TEST}, then open \valve{14} to let the additional change gas in the vacuum can.
-        \item Wait 5 seconds, then close \valve{14}.
-        \item Detach and close the helium bottle.
+        \item[1] Open the `valve control' software.
+        \item[2] Click the `4K heater' tab. 
+        \item[3] Use the sliders to set current and voltage to their maximums
+        \item[4] Set the timer to 15 hours.
+        \item[5] Click the checkbox next to `on'.
         \end{enumerate}
-    \item Turn off the \thing{pulse tube} on the control panel, then switch off the compressors' main breakers.
-    \item Set up a fan (better two) pointed at the vacuum can to prevent condensation. Do not place the fans directly under the vacuum can.
-    \item Optional: turn on the 4K heater in the software. Set for maximum power for 15 hours.
-    \item Clean the external trap now. If it is forgotten and warms up when the dewar runs dry, you risk forming an accidental cryobomb. 
-    \item The fridge also has an internal trap inside the cryostat.
-    When \temperature{2} crosses above $80$~K,  check if \pressure{3} reaches $> 1000 \mBar$
-     (normally, it should stay below $10 \mBar$).
-     If so, you should also start cleaning this trap immediately by turning on \thing{scroll2} and opening \valve{4}, \valve{17}, \valve{21}. 
+        
+    
+    \item Clean the external trap now. If it is forgotten and warms up when the Dewar runs dry, you risk forming an accidental cryobomb. 
+    Follow the instruction in section \ref{sec:external_trap}.
+    
+    The fridge has a second internal trap inside the cryostat.
+    When the pulse tube plate gets warm it will release it's contents.
+    
+    \item Wait until $\temperature{2} > 80 \kelvin$, this takes about 20 minutes.
+    \item Check that \pressure{3} is below  $ 300 \mBar$. 
+    If not you will also start cleaning this trap immediately.
+    
+    Only if $\pressure{3} > 300 \mBar$: 
+    \begin{enumerate}
+     \item Turn on \thing{scroll2}.
+     \item Open \valve{4}, \valve{17}, and \valve{21}.
+     \item Wait until $\pressure{3} < 10 \mBar$.  We are not aiming for clean now. We just need it to be safe for the rest of the warming up.
+     \item Close \valve{4}, \valve{17}, and \valve{21}.
+     \item Turn off \thing{scroll2}.
+    \end{enumerate}
+    
+    The rest of the warm up takes about 24 hours.
+    
+    
 \end{enumerate}
 
-\subsection{Clean External Trap}
-The mix is recovered, and the manual dump valve is closed. All valves on the control panel are closed. 
+\newpage
+\subsection{Clean External Trap} \label{sec:external_trap}
+These instructions assume that the mix is recovered, and the manual dump valve is closed.
+All valves on the control panel are closed. 
 \begin{enumerate}
-    \item Start \thing{scroll2}, then open \valve{21} to  evacuate the manifold until
+    \item Start \thing{scroll2}, then open \valve{21} to evacuate the manifold until
     \pressure{6} $< 10^{-2} \mBar$. 
-    \item Close \valve{21} and open \valve{17}. Monitor \pressure{6}
-    to make sure that the path to the trap was evacuated (it should drop further). 
-    \item Open \valve{7} and then take the trap out of the dewar,
-    secure it with Velcro tape or a cable tie.
-    \item Observe \pressure{6}, in only a minute or two it should start rising. It should not rise above 1 Bar, only if it does: open \valve{21} and record ``overfull'' in the logbook.
-    \item Heat the trap with a blow dryer.
-    \item Monitor \pressure{6} until the trap is all warmed up. Record \pressure{6}
-     in the fridge logbook as an indication of the gunk that the trap has collected during the last cooldown. Typical values are $10-100\mBar$.
+    \item Close \valve{21} and open \valve{17}.
+    \item Monitor \pressure{6} to make sure that the path to the trap was evacuated (it should drop further). 
+    \item Open \valve{7}
+    \item Take the trap out of the Dewar and secure it with a clamp stand, Velcro tape, or a cable tie.
+    \item Observe \pressure{6}, in only a minute or two it should start rising.
+    
+    It should not rise above 1 Bar, only if it does: open \valve{21} and record ``overfull'' in the logbook.
+
+    \item Heat the trap with a blow dryer, held with a clamp stand to direct heat towards the base of the trap.
+    
+    \item Monitor \pressure{6} until the trap is warm to the touch.
+    \item Record \pressure{6} in the fridge logbook as an indication of the gunk that the trap has collected during the last cooldown.
+    Typical values are $10-100\mBar$.
     \item Open \valve{21} to start pumping on the trap.
-    Pump for at least half an hour while heating the trap. In the meantime, refill the dewar.
+    Pump for at least half an hour while heating the trap. In the meantime, refill the Dewar with LN2.
     \item Close all valves.
     \item Slowly insert the trap back into the liquid nitrogen.
 \end{enumerate}
 
+\newpage
 \subsection{Opening the fridge}
 The cryostat is fully warmed up (\textbf{all} temperatures around 290 K, ca. 48 hours). Note that \temperature{6} is not calibrated above $100$~K,
 except for a single calibration point at $292$~K. All valves are closed.
 
-\begin{figure}[t]
+\begin{figure}[ht]
 \centering
 \textbf{\color{sectioncolor}Venting KF Cap}\\
 \import{fig/}{vent_kf.pdf_tex}
@@ -404,18 +736,21 @@ This cap has a small hole, about 1 mm diameter, that limits the inrush of air.
 
 \begin{enumerate}
     \item Check that \pressure{1} is turned off (``Sen-off'').
-    \item Make sure that the \thing{VENT} port is covered by an impedance (eather a KF25 plastic cap with hole, or the metal KF flange with the hole).
-    Do not vent without impedance, you can crush the shields!
-    \item Vent by opening \valve{14}, \valve{16}, and \valve{19}.
+    \item Make sure that the \thing{VENT} port is covered by an impedance (either a KF25 plastic cap with hole, or the metal KF flange with the hole).
+    \textbf{Do not vent without impedance}, you can crush the shields! This has happened at TUD. 
+    \item Vent by opening \valve{14}, \valve{16}, and \valve{19}. This takes about 10 minutes. 
     \item Usually, you only want to access the mixing chamber. In that case you need to
         \begin{enumerate}
         \item Lamborghini: Only unmount the lowest segment of each shields. 
         \item Pagani: Unmount the two lower segments of the VC, and both segments of the 50~K, 4~K, and still shields, in order to unmount the CP shield.
         \end{enumerate}
     \item Before you open the satellite or begin to change wiring and/or samples, have someone with TWPA experience disconnect and terminate all TWPAs.
-    Only do this if you have been shown how to do it -- TWPAs are priceless and very ESD-sensitive.
+    Only do this if you have been \emph{explicitly} instructed to do so -- TWPAs are priceless and very ESD-sensitive.
 \end{enumerate}
 
+
+
+\newpage
 \section{Usual Operating Conditions}
 
 \subsection{Lamborghini}
@@ -462,12 +797,9 @@ If the setting were not messed with they will remain correct. Here is our known 
 Using the LakeShore Reader software on the computer, in the `Heater setup' tab set the control coefficients
 $P: 0.01$, $I:1.00$, and $D:0.00$. The range of $31.6$ mW is sufficient. Control mode: `closed', control channel: `5' (\temperature{5}), heater resistance: $120$.
 
-
+\newpage
 \section{Fridge Turnaround Performance}
-
-
-
-\begin{figure}[t]
+\begin{figure}[h]
 \centering
 \textbf{\color{sectioncolor}Pagani}
 \includegraphics{fig/pagani_performance.pdf}
@@ -478,8 +810,7 @@ $P: 0.01$, $I:1.00$, and $D:0.00$. The range of $31.6$ mW is sufficient. Control
 (\textbf{\color{sectioncolor}D}) Warming up when the run is over.
 }
 \end{figure}
-
-\begin{figure}[t]
+\begin{figure}[h]
 \centering
 \textbf{\color{sectioncolor}Lamborghini}
 \includegraphics{fig/lamb_performance.pdf}
@@ -491,8 +822,34 @@ $P: 0.01$, $I:1.00$, and $D:0.00$. The range of $31.6$ mW is sufficient. Control
 }
 \end{figure}
 
+\clearpage
+\section{General Information}
 
 
+
+
+\begin{figure}[h]
+\centering
+\import{fig/}{fridge_layout.pdf_tex}
+\caption{\textbf{Fridge layout} Showing the location of thermometers \temperature{1} - \temperature{6} and the fridge pressures, \pressure{1} - \pressure{3}. The \thing{HS-ST} connections the 4K to the Still, \thing{HS-MC} connects the mixing chamber to the still. 
+\label{fig:fridge_layout}
+}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics{fig/blu_fors_ghs.pdf}
+\caption{\textbf{Control layout.}
+\label{fig:blu_fors_ghs}
+}
+\end{figure}
+
+\clearpage
+
+\section{Photocopy Sheets}
+
+\subsection{Trap log}
+\includepdf[pages=-]{fig/Trap_sheet.pdf}
 
 
 
