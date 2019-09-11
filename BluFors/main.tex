@@ -603,7 +603,14 @@ These instruction begin assuming the fridge is circulating normally.
        
     \item Using \thing{TEST} and \valve{21}, let $\pressure{6} = 15 \mBar$ of helium in the
     volume \volume{\valve{14} \valve{16} \valve{21}}. You can juggle \valve{16} and \valve{21} to lower the pressure in steps. 
-    \item Wait until \thing{turbo1} is spun down [picture].
+    \item Wait until \thing{turbo1} is spun down. Less that $30$~Hz is acceptable.
+    if the frequency is not visable, use the left and right buttons to navigate to screen 309: Actual Spd.
+    
+    {
+\centering
+\includegraphics[width=3cm]{fig/turbo_speed.jpg}
+}
+    
     \item Open \valve{3} and \valve{2} to recover mixture from both sides of the dilution unit and the trap.
     \item Open \valve{14} to let the exchange gas into the vacuum can. Wait 5 seconds, then close \valve{14} again.
     The still, \pressure{2}, should increase as the mix begins to evaporate.
